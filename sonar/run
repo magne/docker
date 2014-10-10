@@ -1,0 +1,30 @@
+#!/bin/bash
+set -e
+
+if [[ -n $DECKING && ! -f /opt/.firstrun ]]; then
+    touch /opt/.firstrun
+    exit 0
+fi
+
+SONAR_DB=${SONAR_DB:-"sonar"}
+SONAR_DB_USER=${SONAR_DB_USER:-"sonar"}
+SONAR_DB_PASS=${SONAR_DB_PASS:-"sonar"}
+
+SONAR_DIR=/opt/sonar
+SONAR_CMD=$SONAR_DIR/bin/linux-x86-64/sonar.sh
+SONAR_CONFIG_FILE=$SONAR_DIR/conf/sonar.properties
+
+for d in $SONAR_DIR/extensions/plugins $SONAR_DIR/logs; do
+    if [[ ! -d $d || `stat -c %U $d` != 'sonar' ]]; then
+        mkdir -p $d
+        chown -R sonar:sonar $d
+    fi
+done
+
+sed -e "s|sonar.jdbc.username=.*|sonar.jdbc.username=${SONAR_DB_USER}|g" \
+    -e "s|sonar.jdbc.password=.*|sonar.jdbc.password=${SONAR_DB_PASS}|g" \
+    -e "s|sonar.jdbc.url=jdbc:h2|#sonar.jdbc.url=jdbc:h2|g" \
+    -e "s|#\?\(sonar.jdbc.url=jdbc:postgresql://\)\([^/]*\)/\(.*\)|\1${DB_PORT_5432_TCP_ADDR}:${DB_PORT_5432_TCP_PORT}/${SONAR_DB}|g" \
+    -i $SONAR_CONFIG_FILE
+
+RUN_AS_USER=sonar $SONAR_CMD console

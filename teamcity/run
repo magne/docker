@@ -1,0 +1,41 @@
+#!/bin/bash
+set -e
+
+if [[ -n $DECKING && ! -f /opt/.firstrun ]]; then
+    touch /opt/.firstrun
+    exit 0
+fi
+
+TEAMCITY_DB=${TEAMCITY_DB:-"teamcity"}
+TEAMCITY_DB_USER=${TEAMCITY_DB_USER:-"teamcity"}
+TEAMCITY_DB_PASS=${TEAMCITY_DB_PASS:-"teamcity"}
+
+for d in /opt/TeamCity/logs $TEAMCITY_DATA_PATH; do
+    if [[ ! -d $d || `stat -c %U $d` != 'teamcity' ]]; then
+        mkdir -p $d
+        chown -R teamcity:teamcity $d
+    fi
+done
+
+TEAMCITY_DB_CONFIG=$TEAMCITY_DATA_PATH/config/database.properties
+if [ -f $TEAMCITY_DB_CONFIG ]; then
+    sed -e "s|connectionUrl=.*|connectionUrl=jdbc:postgresql://${DB_PORT_5432_TCP_ADDR}:5432/${TEAMCITY_DB}|g" \
+        -e "s|connectionProperties.user=.*|connectionProperties.user=${TEAMCITY_DB_USER}|g" \
+        -e "s|connectionProperties.password=.*|connectionProperties.password=${TEAMCITY_DB_PASS}|g" \
+        -i $TEAMCITY_DB_CONFIG
+fi
+
+TEAMCITY_JDBC=$TEAMCITY_DATA_PATH/lib/jdbc
+if [ ! -f $TEAMCITY_JDBC/postgresql-9.3-1101.jdbc41.jar ]; then
+    wget -P $TEAMCITY_JDBC http://jdbc.postgresql.org/download/postgresql-9.3-1101.jdbc41.jar
+fi
+
+if [ $TEAMCITY_WITH_AGENT == 'yes' ]; then
+    cmd='/opt/TeamCity/bin/runAll.sh start'
+else
+    cmd='/pt/TeamCity/bin/teamcity-server.sh start'
+fi
+
+su -l -p -s /bin/bash -c "$cmd" teamcity
+
+tail -F /opt/TeamCity/logs/teamcity-server.log
