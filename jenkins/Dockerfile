@@ -24,4 +24,4 @@ ENV JENKINS_HOME /var/lib/jenkins
 
 EXPOSE 8080
 
-CMD su -l -p -c 'java -Djava.awt.headless=true -Xmx256m -jar /usr/share/jenkins/jenkins.war --webroot=/var/cache/jenkins/war --httpPort=8080 --ajp13Port=-1' jenkins
+CMD su -l -c "export JENKINS_HOME=$JENKINS_HOME && java -Djava.awt.headless=true -Xmx256m -jar /usr/share/jenkins/jenkins.war --webroot=/var/cache/jenkins/war --httpPort=8080 --ajp13Port=-1" jenkins
