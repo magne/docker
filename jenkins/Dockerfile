@@ -9,10 +9,16 @@ RUN addgroup --system --quiet jenkins && \
     chmod u+rwx /var/lib/jenkins /var/log/jenkins && \
     chmod 750 /var/cache/jenkins
 
-ADD http://mirrors.jenkins-ci.org/war/1.581/jenkins.war /usr/share/jenkins/jenkins.war
+ADD http://mirrors.jenkins-ci.org/war/1.585/jenkins.war /usr/share/jenkins/jenkins.war
 
 RUN chown -R jenkins:jenkins /usr/share/jenkins && \
     chmod -R u+rw /usr/share/jenkins/*
+
+# Install git
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y git && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 ENV JENKINS_HOME /var/lib/jenkins
 
