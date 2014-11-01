@@ -5,7 +5,7 @@ ENV NEXUS_HOME /opt/nexus
 ENV NEXUS_VERSION 3.0.0-m1
 
 # Install Nexus
-ADD nexus-3.0.0-m1-bundle.tar.gz /opt
+ADD nexus-base-template-3.0.0-SNAPSHOT.tar.gz /opt
 RUN addgroup --system --quiet nexus && \
     adduser --system --quiet --home /opt/nexus --no-create-home --ingroup nexus --disabled-password --shell /bin/bash --gecos 'Nexus' nexus && \
     echo 'wget -O - http://www.sonatype.org/downloads/nexus-$NEXUS_VERSION-bundle.tar.gz | tar xz -C /opt' && \
