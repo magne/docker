@@ -7,9 +7,9 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-ENV SONAR_VERSION 4.5-RC2
+ENV SONAR_VERSION 4.5.1
 
-ADD sonarqube-4.5-RC2.zip /tmp/sonarqube-4.5-RC2.zip
+ADD sonarqube-4.5.1.zip /tmp/sonarqube-4.5.1.zip
 # Install SonarQube
 RUN addgroup --system --quiet sonar && \
     adduser --system --quiet --home /opt/sonar --no-create-home --ingroup sonar --disabled-password --shell /bin/bash --gecos 'Sonar' sonar && \
