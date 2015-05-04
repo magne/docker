@@ -1,0 +1,13 @@
+jenkinsData:
+    image: tianon/true
+    volumes:
+        - /var/lib/jenkins
+
+jenkins:
+    build: .
+    ports:
+        - "8080:8080"
+    volumes:
+        - /var/log/jenkins
+    volumes_from:
+        - jenkinsData
