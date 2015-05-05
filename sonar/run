@@ -1,11 +1,6 @@
 #!/bin/bash
 set -e
 
-if [[ -n $DECKING && ! -f /opt/.firstrun ]]; then
-    touch /opt/.firstrun
-    exit 0
-fi
-
 SONAR_DB=${SONAR_DB:-"sonar"}
 SONAR_DB_USER=${SONAR_DB_USER:-"sonar"}
 SONAR_DB_PASS=${SONAR_DB_PASS:-"sonar"}

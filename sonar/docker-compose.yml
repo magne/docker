@@ -1,0 +1,32 @@
+sonarpgdata:
+    image: tianon/true
+    volumes:
+        - /var/lib/postgresql
+        - /var/log/postgresql
+
+sonarpg:
+    image: magne/postgres
+    environment:
+        - POSTGRESQL_USER=sonar
+        - POSTGRESQL_PASS=sonar
+        - POSTGRESQL_DB=sonar
+    volumes_from:
+        - sonarpgdata
+
+sonardata:
+    image: tianon/true
+    volumes:
+        - /opt/sonar/extensions/plugins
+        - /opt/sonar/logs
+
+sonar:
+    build: .
+    ports:
+        - "9000:9000"
+    environment:
+        - DB_USERNAME=sonar
+        - DB_PASSWORD=sonar
+    volumes_from:
+        - sonardata
+    links:
+        - sonarpg:db
