@@ -7,12 +7,12 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-ENV TEAMCITY_VERSION 8.1.4
+ENV TEAMCITY_VERSION 9.0.4
 ENV TEAMCITY_DATA_PATH /opt/teamcity-data
 
 # Install TeamCity
 #    curl -L 
-ADD TeamCity-8.1.4.tar.gz /opt
+ADD TeamCity-9.0.4.tar.gz /opt
 RUN addgroup --system --quiet teamcity && \
     adduser --system --quiet --home /opt/teamcity --no-create-home --ingroup teamcity --disabled-password --shell /bin/bash --gecos 'TeamCity' teamcity && \
     echo 'wget -O - http://download.jetbrains.com/teamcity/TeamCity-$TEAMCITY_VERSION.tar.gz | tar xz -C /opt' && \

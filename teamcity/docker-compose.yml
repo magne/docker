@@ -1,0 +1,30 @@
+teamcitypgdata:
+    image: tianon/true
+    volumes:
+        - /var/lib/postgresql
+        - /var/log/postgresql
+
+teamcitypg:
+    image: magne/postgres
+    environment:
+        - POSTGRESQL_USER=teamcity
+        - POSTGRESQL_PASS=teamcity
+        - POSTGRESQL_DB=teamcity
+    volumes_from:
+        - teamcitypgdata
+
+teamcitydata:
+    image: tianon/true
+    volumes:
+        - /opt/teamcity-data
+
+teamcity:
+    build: .
+    ports:
+        - "8111:8111"
+    environment:
+        - TEAMCITY_WITH_AGENT=yes
+    volumes_from:
+        - teamcitydata
+    links:
+        - teamcitypg:db

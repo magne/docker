@@ -1,11 +1,6 @@
 #!/bin/bash
 set -e
 
-if [[ -n $DECKING && ! -f /opt/.firstrun ]]; then
-    touch /opt/.firstrun
-    exit 0
-fi
-
 TEAMCITY_DB=${TEAMCITY_DB:-"teamcity"}
 TEAMCITY_DB_USER=${TEAMCITY_DB_USER:-"teamcity"}
 TEAMCITY_DB_PASS=${TEAMCITY_DB_PASS:-"teamcity"}
