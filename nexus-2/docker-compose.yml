@@ -1,0 +1,11 @@
+nexusData:
+    image: tianon/true
+    volumes:
+        - /opt/sonatype-work
+
+nexus:
+    build: .
+    ports:
+        - "8081:8081"
+    volumes_from:
+        - nexusData

@@ -1,11 +1,6 @@
 #!/bin/bash
 set -e
 
-if [[ -n $DECKING && ! -f /opt/.firstrun ]]; then
-    touch /opt/.firstrun
-    exit 0
-fi
-
 SONATYPE_WORK=`dirname $NEXUS_HOME`/sonatype-work
 if [[ ! -d $SONATYPE_WORK || `stat -c %U $SONATYPE_WORK` != 'nexus' ]]; then
     mkdir -p $SONATYPE_WORK
